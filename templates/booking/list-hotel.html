@@ -1,0 +1,14 @@
+<h1>Lista de Hoteles</h1>
+
+<p>
+    <a href="{% url 'create_hotel' %}">Agregar Hotel</a>
+</p>
+
+<ul>
+    {% for course in object_list %}
+        <li>
+            <p>{{ course.name }}</p>
+
+        </li>
+    {% endfor %}
+</ul>
