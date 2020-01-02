@@ -1,13 +1,18 @@
 <h1>Lista de Hoteles</h1>
 
 <p>
-    <a href="{% url 'create_hotel' %}">Agregar Hotel</a>
+    <a href="{% url 'new_hotel' %}">Agregar Hotel</a>
 </p>
 
 <ul>
-    {% for course in object_list %}
+    {% for hotel in object_list %}
         <li>
-            <p>{{ course.name }}</p>
+            <p>{{ hotel.name }}</p>
+            <p>
+                <a href="{% url 'detail_hotel' hotel.id %}">Ver</a> |
+                <a href="{% url 'update_hotel' hotel.id %}">Editar</a> |
+                <a href="{% url 'delete_hotel' hotel.id %}">Borrar</a>
+            </p>
 
         </li>
     {% endfor %}

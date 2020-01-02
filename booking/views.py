@@ -14,21 +14,24 @@ class HotelList(ListView):
 
 class HotelDetail(DetailView):
     model = Hotel
+    template_name = 'booking/detail-hotel.html'
 
 
 class HotelCreate(CreateView):
     model = Hotel
-    template_name = 'booking/create-hotel.html'
+    template_name = 'booking/form-hotel.html'
     success_url = reverse_lazy('list_hotel')
     fields = ['name', 'description', 'location', 'picture']
 
 
-class HotelUpdate(CreateView):
+class HotelUpdate(UpdateView):
     model = Hotel
-    success_url = reverse_lazy('booking:list')
+    template_name = 'booking/form-hotel.html'
+    success_url = reverse_lazy('list_hotel')
     fields = ['name', 'description', 'location', 'picture']
 
 
 class HotelDelete(DeleteView):
     model = Hotel
-    success_url = reverse_lazy('booking:list')
+    template_name = 'booking/confirm-delete.html'
+    success_url = reverse_lazy('list_hotel')
