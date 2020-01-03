@@ -2,34 +2,40 @@
 <title>{% block title %}Home{% endblock %}</title>
 {% block content %}
 
-<h1>Lista de Hoteles</h1>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <h1>Lista de Hoteles</h1>
+    </div>
+  </div>
+</div>
 
-<p>
 
-</p>
-
-<ul>
+<div class="container">
+  <div class="row">
     {% for hotel in object_list %}
-    <div class="card mb-3" style="max-width: 540px;">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="https://q-cf.bstatic.com/images/hotel/max500/542/54259486.jpg" class="card-img" alt="Card image">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{hotel.name}}</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-              {% if user.is_staff %}
-              <a class="btn btn-primary" href="{% url 'detail_hotel' hotel.id %}" role="button">Ver</a>
-              <a class="btn btn-primary" href="{% url 'update_hotel' hotel.id %}">Editar</a>
-              <a class="btn btn-primary" href="{% url 'delete_hotel' hotel.id %}">Borrar</a>
-              {% endif %}
+    <div class="col">
+      <div class="card mb-2 border-success" style="width: 1080px; height: 275px;">
+        <div class="row">
+          <div class="col-md-3">
+            <a href="{% url 'detail_hotel' hotel.id %}" role="button">
+              <img src={{hotel.picture}} class="card-img" alt="Card image" style="height: 273px">
+            </a>
+          </div>
+          <div class="col-md-9">
+             <div class="card-body">
+               <h5 class="card-title">{{hotel.name}} - {{hotel.location}}</h5>
+               <p class="card-text"><small>{{hotel.description}}</small></p>
+               {% if user.is_staff %}
+               <a class="text-success"href="{% url 'update_hotel' hotel.id %}">Editar</a> |
+               <a class="text-danger" href="{% url 'delete_hotel' hotel.id %}">Borrar</a>
+               {%endif%}
+             </div>
           </div>
         </div>
       </div>
     </div>
     {% endfor %}
-</ul>
-
+  </div>
+</div>
 {% endblock %}
