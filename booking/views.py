@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -9,7 +8,7 @@ from .models import Hotel, Room
 
 class HotelList(ListView):
     model = Hotel
-    template_name = 'booking/list-hotel.html'
+    template_name = 'booking/home.html'
 
 
 class HotelDetail(DetailView):
@@ -20,34 +19,34 @@ class HotelDetail(DetailView):
 class HotelCreate(CreateView):
     model = Hotel
     template_name = 'booking/form-hotel.html'
-    success_url = reverse_lazy('list_hotel')
+    success_url = reverse_lazy('home')
     fields = ['name', 'description', 'location', 'picture']
 
 
 class HotelUpdate(UpdateView):
     model = Hotel
     template_name = 'booking/form-hotel.html'
-    success_url = reverse_lazy('list_hotel')
+    success_url = reverse_lazy('home')
     fields = ['name', 'description', 'location', 'picture']
 
 
 class HotelDelete(DeleteView):
     model = Hotel
     template_name = 'booking/confirm-delete.html'
-    success_url = reverse_lazy('list_hotel')
+    success_url = reverse_lazy('home')
 
 
 class RoomCreate(CreateView):
     model = Room
     template_name = 'booking/form-room.html'
-    success_url = reverse_lazy('list_hotel ')
+    success_url = reverse_lazy('home ')
     fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type']
 
 
 class RoomUpdate(UpdateView):
     model = Room
     template_name = 'booking/form-room.html'
-    success_url = reverse_lazy('list_hotel')
+    success_url = reverse_lazy('home')
     fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type']
 
 

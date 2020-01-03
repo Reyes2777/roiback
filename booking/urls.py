@@ -6,7 +6,6 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^list$', views.HotelList.as_view(), name='list_hotel'),
     url(r'^detail/(?P<pk>\d+)$', views.HotelDetail.as_view(), name='detail_hotel'),
     url(r'^new-hotel',  permission_required('is_staff')(views.HotelCreate.as_view()), name='new_hotel'),
     url(r'^update-hotel/(?P<pk>\d+)$',  permission_required('is_staff')(views.HotelUpdate.as_view()),

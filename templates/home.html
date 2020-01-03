@@ -1,14 +1,35 @@
 {% extends 'base.html' %}
-
-{% block title %}Home{% endblock %}
-
+<title>{% block title %}Home{% endblock %}</title>
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-  <a href="{% url 'signup' %}">sign up</a>
-{% endif %}
+
+<h1>Lista de Hoteles</h1>
+
+<p>
+
+</p>
+
+<ul>
+    {% for hotel in object_list %}
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img src="https://q-cf.bstatic.com/images/hotel/max500/542/54259486.jpg" class="card-img" alt="Card image">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{hotel.name}}</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+              {% if user.is_staff %}
+              <a class="btn btn-primary" href="{% url 'detail_hotel' hotel.id %}" role="button">Ver</a>
+              <a class="btn btn-primary" href="{% url 'update_hotel' hotel.id %}">Editar</a>
+              <a class="btn btn-primary" href="{% url 'delete_hotel' hotel.id %}">Borrar</a>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</ul>
+
 {% endblock %}

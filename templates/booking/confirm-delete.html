@@ -1,4 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
 <form method="post">{% csrf_token %}
     ¿Estás seguro que deseas borrar el Hotel "{{ object.name }}"?
     <input type="submit" value="Submit" />
 </form>
+{% endblock %}
