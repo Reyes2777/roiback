@@ -1,4 +1,4 @@
-location_choices = (
+LOCATION_CHOICES = (
     ('Medellin', 'Medellin'),
     ('Bogota', 'Bogota'),
     ('Neiva', 'Neiva'),
