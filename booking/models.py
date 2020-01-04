@@ -7,7 +7,7 @@ from accounts.models import CustomUser
 class Hotel(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=300)
-    location = models.CharField(choices=LOCATION_CHOICES, default='Bogota', max_length=50)
+    location = models.CharField(choices=LOCATION_CHOICES, default='bogota', max_length=50)
     picture = models.CharField(max_length=120)
     likes = models.IntegerField(default=0)
     unlikes = models.IntegerField(default=0)

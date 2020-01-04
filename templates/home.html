@@ -13,6 +13,7 @@
           <div class="form-group col-md-3">
             <label for="id_capacity_room">Cantidad de Personas:</label>
             <select name="capacity_room" id="id_capacity_room" class="form-control">
+              <option value=""></option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -51,22 +52,22 @@
 
 <div class="container">
   <div class="row">
-    {% for hotel in object_list %}
+    {% for room in rooms %}
     <div class="col-12">
       <div class="card mb-2 border-success" style="height: 275px;">
         <div class="row">
           <div class="col-md-3">
-            <a href="{% url 'detail_hotel' hotel.id %}" role="button">
-              <img src={{hotel.picture}} class="card-img" alt="Card image" style="height: 273px">
+            <a href="{% url 'detail_hotel' room.hotel.id %}" role="button">
+              <img src={{room.hotel.picture}} class="card-img" alt="Card image" style="height: 273px">
             </a>
           </div>
           <div class="col-md-9">
              <div class="card-body">
-               <h5 class="card-title">{{hotel.name}} - {{hotel.location}}</h5>
-               <p class="card-text"><small>{{hotel.description}}</small></p>
+               <h5 class="card-title">{{room.hotel.name}} - {{room.hotel.location}}</h5>
+               <p class="card-text"><small>{{room.hotel.description}}</small></p>
                {% if user.is_staff %}
-               <a class="text-success"href="{% url 'update_hotel' hotel.id %}"><small>Editar</small></a><small> |</small>
-               <a class="text-danger" href="{% url 'delete_hotel' hotel.id %}"></a>
+               <a class="text-success"href="{% url 'update_hotel' room.hotel.id %}"><small>Editar</small></a><small> |</small>
+               <a class="text-danger" href="{% url 'delete_hotel' room.hotel.id %}"><small>Borrar</small></a>
                {%endif%}
              </div>
           </div>

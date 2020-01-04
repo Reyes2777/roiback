@@ -1,9 +1,27 @@
+from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
 from .models import Hotel, Room
+
+
+def filter_view(request):
+    room = Room.objects.all()
+    location_room_query = request.GET.get('location_room').lower()
+    capacity_room_query = request.GET.get('capacity_room')
+    date_in_query = request.GET.get('date_in')
+    date_out_query = request.GET.get('date_out')
+    print(location_room_query)
+    query_set = room.filter(
+        hotel__location__icontains=location_room_query,)
+    context = {
+        'rooms': query_set
+    }
+    print(query_set)
+
+    return render(request, 'home.html', context)
 
 
 class HotelList(ListView):

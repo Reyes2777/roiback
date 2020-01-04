@@ -1,11 +1,11 @@
 LOCATION_CHOICES = (
-    ('Medellin', 'Medellin'),
-    ('Bogota', 'Bogota'),
-    ('Neiva', 'Neiva'),
-    ('Cali', 'Cali'),
-    ('Cartagena', 'Cartagena'),
-    ('Santa Marta', 'Santa Marta'),
-    ('Ibague', 'Ibague'),
-    ('Pereira', 'Pereira'),
-    ('Manizales', 'Manizales')
+    ('medellin', 'Medellin'),
+    ('bogota', 'Bogota'),
+    ('neiva', 'Neiva'),
+    ('cali', 'Cali'),
+    ('cartagena', 'Cartagena'),
+    ('santa marta', 'Santa Marta'),
+    ('ibague', 'Ibague'),
+    ('pereira', 'Pereira'),
+    ('manizales', 'Manizales')
 )
