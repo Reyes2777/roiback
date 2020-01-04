@@ -1,21 +1,59 @@
 {% extends 'base.html' %}
 <title>{% block title %}Home{% endblock %}</title>
 {% block content %}
-
 <div class="container">
-  <div class="row justify-content-md-center">
-    <div class="col-md-auto">
-      <h1>Lista de Hoteles</h1>
+  <div class="alert alert-success" role="alert">
+    <h3>Busqueda</h3>
+    <form method="GET" action=".">
+    <div class="form-row ">
+          <div class="form-group col-md-3">
+              <label for="id_location_room">Ubicación:</label>
+              <input type="text" name="location_room" maxlength="50" id="id_location_room" class="form-control">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="id_capacity_room">Cantidad de Personas:</label>
+            <select name="capacity_room" id="id_capacity_room" class="form-control">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label >Fecha de Entrada</label>
+            <input type="date" name="date_in" id="date_in" max="3000-12-31" min="1000-01-01" class="form-control">
+          </div>
+          <div class="form-group col-md-3">
+            <label >Fecha de Salida</label>
+            <input type="date" name="date_out" id="date_out" max="3000-12-31" min="1000-01-01" class="form-control">
+          </div>
+        </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="category">Category</label>
+        <select id="category" class="form-control" name="category">
+          <option selected>Choose...</option>
+          {% for cat in categories %}
+          <option value="{{ cat }}">{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
+    <button type="submit" class="btn btn-success">Busqueda</button>
+  </form>
   </div>
-</div>
 
+</div>
 
 <div class="container">
   <div class="row">
     {% for hotel in object_list %}
-    <div class="col">
-      <div class="card mb-2 border-success" style="width: 1080px; height: 275px;">
+    <div class="col-12">
+      <div class="card mb-2 border-success" style="height: 275px;">
         <div class="row">
           <div class="col-md-3">
             <a href="{% url 'detail_hotel' hotel.id %}" role="button">
@@ -27,8 +65,8 @@
                <h5 class="card-title">{{hotel.name}} - {{hotel.location}}</h5>
                <p class="card-text"><small>{{hotel.description}}</small></p>
                {% if user.is_staff %}
-               <a class="text-success"href="{% url 'update_hotel' hotel.id %}">Editar</a> |
-               <a class="text-danger" href="{% url 'delete_hotel' hotel.id %}">Borrar</a>
+               <a class="text-success"href="{% url 'update_hotel' hotel.id %}"><small>Editar</small></a><small> |</small>
+               <a class="text-danger" href="{% url 'delete_hotel' hotel.id %}"></a>
                {%endif%}
              </div>
           </div>

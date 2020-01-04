@@ -7,7 +7,8 @@
   <title>{% block title %}Base roiback{% endblock %}</title>
 </head>
 <body>
-      <nav class="navbar navbar-expand-md navbar-dark bg-success">
+<div class="container ">
+  <nav class="navbar navbar-expand-md navbar-dark bg-success">
         <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -37,9 +38,8 @@
           </ul>
         </div>
       </nav>
-      {% if user.is_staff %}
-       <a class="nav-link" href="{% url 'new_hotel' %}">Nuevo Hotel</a>
-      {% endif %}
+</div>
+
       {% block content %}
       {% endblock %}
 
