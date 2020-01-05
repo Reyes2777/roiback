@@ -16,7 +16,8 @@ from .utils import is_valid_queryparam, normalize_string
 
 
 def filter_view(request):
-    query_set = Room.objects.all()
+    query_set = Room.objects.filter(active=True,
+                                    hotel__active=True)
     today = datetime.date.today()
     reservations = Reservation.objects.all()
     location_room_query = request.GET.get('location_room')
