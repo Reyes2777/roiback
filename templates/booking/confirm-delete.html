@@ -1,7 +1,22 @@
 {% extends 'base.html' %}
+{% block title %}Delete{% endblock %}
 {% block content %}
-<form method="post">{% csrf_token %}
-    ¿Estás seguro que deseas borrar el Hotel "{{ object.name }}"?
-    <input type="submit" value="Submit" />
-</form>
+
+<div class="container">
+    <div class="row" style="height: 150px;"></div>
+    <div class="row" style="height: 150px;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="alert alert-danger" role="alert" style="height: 200px;">
+                <form method="post">{% csrf_token %}
+                    <h4>¿Estás seguro que deseas borrar "{{ object}}"?</h4>
+                    <input class="btn btn-danger" type="submit" value="Eliminar" />
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+</div>
+
 {% endblock %}

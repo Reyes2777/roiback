@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -15,6 +16,7 @@ from .utils import is_valid_queryparam, normalize_string
 
 def filter_view(request):
     query_set = Room.objects.all()
+    today = datetime.date.today()
     reservations = Reservation.objects.all()
     location_room_query = request.GET.get('location_room')
     capacity_room_query = request.GET.get('capacity_room')
@@ -23,7 +25,10 @@ def filter_view(request):
 
     if is_valid_queryparam(location_room_query):
         query_set = query_set.filter(
-            hotel__location__icontains=normalize_string(location_room_query),)
+            hotel__location__icontains=normalize_string(location_room_query),
+            hotel__active=True,
+            active=True
+        )
 
     if is_valid_queryparam(capacity_room_query):
         query_set = query_set.filter(
@@ -38,7 +43,9 @@ def filter_view(request):
         query_set = query_set.exclude(id__in=list_reservation)
 
     context = {
-        'rooms': query_set
+        'rooms': query_set,
+        'today': today.strftime('%Y-%m-%d'),
+        'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
     }
     print(query_set)
 
@@ -66,58 +73,65 @@ def reservation_view(request, room):
     return render(request, 'booking/form-reservation.html', )
 
 
+def details_admin(request):
+
+    rooms = Room.objects.all()
+    hotels = Hotel.objects.all()
+
+    context = {
+        'rooms': rooms,
+        'hotels': hotels
+    }
+    return render(request, 'booking/details.html', context)
+
+
 class HotelList(ListView):
     model = Hotel
     template_name = 'booking/home.html'
 
 
-class HotelDetail(DetailView):
-    model = Hotel
-    template_name = 'booking/detail-hotel.html'
-
-
 class HotelCreate(CreateView):
     model = Hotel
     template_name = 'booking/form-hotel.html'
-    success_url = reverse_lazy('home')
-    fields = ['name', 'description', 'location', 'picture']
+    success_url = reverse_lazy('details')
+    fields = ['name', 'description', 'location', 'picture', 'active']
 
 
 class HotelUpdate(UpdateView):
     model = Hotel
     template_name = 'booking/form-hotel.html'
-    success_url = reverse_lazy('home')
-    fields = ['name', 'description', 'location', 'picture']
+    success_url = reverse_lazy('details')
+    fields = ['name', 'description', 'location', 'picture', 'active']
 
 
 class HotelDelete(DeleteView):
     model = Hotel
     template_name = 'booking/confirm-delete.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('details')
 
 
 class RoomCreate(CreateView):
     model = Room
     template_name = 'booking/form-room.html'
-    success_url = reverse_lazy('home ')
-    fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type', 'price']
+    success_url = reverse_lazy('details')
+    fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type', 'price', 'picture', 'active']
 
 
 class RoomUpdate(UpdateView):
     model = Room
     template_name = 'booking/form-room.html'
-    success_url = reverse_lazy('home')
-    fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type', 'price', 'active']
+    success_url = reverse_lazy('details')
+    fields = ['hotel', 'number_room', 'description', 'capacity', 'room_type', 'price', 'picture', 'active']
 
 
 class RoomDelete(DeleteView):
     model = Room
     template_name = 'booking/confirm-delete.html'
-    success_url = reverse_lazy('list_hotel')
+    success_url = reverse_lazy('details')
 
 
 class ReservationCreate(CreateView):
     model = Reservation
     template_name = 'booking/form-reservation.html'
     success_url = reverse_lazy('home')
-    fields = ['user', 'reserved_room','date_of_enter', 'date_of_exit', ]
+    fields = ['user', 'reserved_room', 'date_of_enter', 'date_of_exit', ]

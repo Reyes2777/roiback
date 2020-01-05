@@ -1,75 +1,59 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
+  <div class="container">
+    <div class="alert alert-success" role="alert">
+    <form method="post">
     {% csrf_token %}
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="id_username">Username:</label>
-        <input type="text" name="username" maxlength="150" class="form-control" id="id_username">
+        {{form.username|as_crispy_field}}
       </div>
       <div class="form-group col-md-6">
-        <label for="id_username">Email:</label>
-        <input type="email" name="email" maxlength="254" class="form-control" id="id_email">
+        {{form.email|as_crispy_field}}
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="id_first_name">First name:</label>
-        <input type="text" name="first_name" maxlength="30" class="form-control" id="id_first_name">
+        {{form.first_name|as_crispy_field}}
       </div>
       <div class="form-group col-md-6">
-        <label for="id_last_name">Last name:</label>
-        <input type="text" name="last_name" maxlength="150" class="form-control" id="id_last_name">
+        {{form.last_name|as_crispy_field}}
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-3">
-        <label for="id_gender">Genero:</label>
-        <select name="gender" id="id_gender" class="form-control">
-          <option value="" selected="">---------</option>
-          <option value="male">Masculino</option>
-          <option value="female">Femenino</option>
-        </select>
+        {{form.gender|as_crispy_field}}
       </div>
       <div class="form-group col-md-3">
-        <label for="id_identification_type">Tipo de Identificación:</label>
-        <select name="identification_type" id="id_identification_type" class="form-control">
-          <option value="" selected="">---------</option>
-          <option value="CC">CÉDULA DE CIUDADANÍA</option>
-          <option value="CE">CÉDULA DE EXTRANJERIA</option>
-          <option value="PS">PASAPORTE</option>
-          <option value="NIT">NIT</option>
-        </select>
+        {{form.identification_type|as_crispy_field}}
       </div>
       <div class="form-group col-md-6">
-        <label for="id_identification_number">No. Identificación:</label>
-        <input type="text" name="identification_number" maxlength="12" id="id_identification_number" class="form-control">
+        {{form.identification_number|as_crispy_field}}
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label >Fecha de Nacimiento:</label>
+        <label >birthday_date</label>
         <input type="date" name="birthday_date" id="id_birthday_date" max="3000-12-31" min="1000-01-01" class="form-control">
       </div>
       <div class="form-group col-md-6">
-        <label for="id_mobile_number">Número Celular:</label>
-        <input type="text" name="mobile_number" maxlength="10" required="" id="id_mobile_number" class="form-control"></div>
+        {{form.mobile_number|as_crispy_field}}
+      </div>
+
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="id_password1">Contraseña:</label>
-        <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1" class="form-control">
+        {{form.password1|as_crispy_field}}
       </div>
       <div class="form-group col-md-6">
-        <label for="id_password2">Contraseña Confirmación:</label>
-        <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2" class="form-control">
+        {{form.password2|as_crispy_field}}
       </div>
     </div>
     <button class="btn btn-success" type="submit">Sign up</button>
   </form>
-
+    </div>
+  </div>
 {% endblock %}

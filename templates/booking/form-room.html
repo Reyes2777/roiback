@@ -1,8 +1,34 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit" />
-</form>
+<div class="container">
+    <div class="alert alert-success" role="alert">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form row">
+                <div class="form-group col-md-6">
+                    {{form.hotel|as_crispy_field}}
+                </div>
+                <div class="form-group col-md-6">
+                    {{form.number_room|as_crispy_field}}
+                </div>
+            </div>
+            <div class="form row">
+                <div class="form-group col-md-6">
+                    {{form.description|as_crispy_field}}
+                </div>
+                <div class="form-group col-md-6">
+                    {{form.capacity|as_crispy_field}}
+                    {{form.room_type|as_crispy_field}}
+                    {{form.picture|as_crispy_field}}
+                    {{form.price|as_crispy_field}}
+                    {{form.active|as_crispy_field}}
+                </div>
+            </div>
+            <input class="btn btn-success" type="submit" value="Submit" />
+        </form>
+    </div>
+
+</div>
+
 {% endblock %}
