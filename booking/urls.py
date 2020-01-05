@@ -20,5 +20,8 @@ urlpatterns = [
     url(r'^delete-room/(?P<pk>\d+)$', permission_required('is_staff')(views.RoomDelete.as_view()),
         name='delete_room'),
     url(r'^new-reservation/(?P<room>\w{0,50})/$', login_required(views.reservation_view),
-        name='reservation')
+        name='reservation'),
+    url(r'^reservations', login_required(views.reservation_list), name='reservations'),
+    url(r'^delete-reservation/(?P<pk>\d+)$', permission_required('is_staff')(views.ReservationDelete.as_view()),
+        name='delete_reservation'),
 ]

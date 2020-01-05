@@ -93,9 +93,13 @@ def details_admin(request):
     return render(request, 'booking/details.html', context)
 
 
-class HotelList(ListView):
-    model = Hotel
-    template_name = 'booking/home.html'
+def reservation_list(request):
+    reservations = Reservation.objects.all()
+
+    context = {
+        'reservations': reservations,
+    }
+    return render(request, 'booking/bookings.html', context)
 
 
 class HotelCreate(CreateView):
@@ -116,6 +120,12 @@ class HotelDelete(DeleteView):
     model = Hotel
     template_name = 'booking/confirm-delete.html'
     success_url = reverse_lazy('details')
+
+
+class ReservationDelete(DeleteView):
+    model = Reservation
+    template_name = 'booking/confirm-delete.html'
+    success_url = reverse_lazy('reservations')
 
 
 class RoomCreate(CreateView):

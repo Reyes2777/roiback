@@ -46,3 +46,6 @@ class Reservation(models.Model):
     user = models.ForeignKey(CustomUser, default=1, verbose_name='User', on_delete=models.SET_DEFAULT)
     created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
+
+    def __str__(self):
+        return 'Reserva ID{}'.format(self.id)
