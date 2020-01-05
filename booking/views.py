@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .models import Hotel, Room, Reservation
+from .models import Hotel, Room, Reservation, Guest
 from accounts.models import CustomUser
 from .utils import is_valid_queryparam, normalize_string
 
@@ -55,14 +55,21 @@ def filter_view(request):
 
 def reservation_view(request, room):
     user = request.POST.get('user')
+    today = datetime.date.today()
     room = room
     date_enter = request.POST.get('date_of_enter')
     date_exit = request.POST.get('date_of_exit')
+    context = {
+        'today': today.strftime('%Y-%m-%d'),
+        'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
+    }
     if is_valid_queryparam(user):
         user = CustomUser.objects.get(id=int(user))
 
     if is_valid_queryparam(room):
         room = Room.objects.get(id=int(room))
+        context.update({'range': range(int(room.capacity))})
+
     if user and room:
         try:
             reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
@@ -74,11 +81,38 @@ def reservation_view(request, room):
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [user.email, ]
             send_mail(subject, message, email_from, recipient_list)
+            for _id in range(int(room.capacity)):
+                create_guest(request, _id, reservation)
             return redirect('home')
         except Exception as e:
             print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
 
-    return render(request, 'booking/form-reservation.html', )
+    return render(request, 'booking/form-reservation.html', context)
+
+
+def create_guest(request, _id, reservation):
+    first_name = request.POST.get('first_name{}'.format(_id))
+    second_name = request.POST.get('second_name{}'.format(_id))
+    last_name = request.POST.get('last_name{}'.format(_id))
+    last_second_name = request.POST.get('second_last_name{}'.format(_id))
+    birthday_date = request.POST.get('birthday_date{}'.format(_id))
+    gender = request.POST.get('gender{}'.format(_id))
+    identification_number = request.POST.get('identification_number{}'.format(_id))
+    identification_type = request.POST.get('identification_type{}'.format(_id))
+    mobile_number = request.POST.get('mobile_number{}'.format(_id))
+
+    print(first_name, second_name, last_name, last_second_name, birthday_date, gender, identification_number,
+          identification_type, mobile_number)
+
+    guest = Guest(
+        first_name=first_name, second_name=second_name, last_name=last_name, last_second_name=last_second_name,
+        birthday_date=birthday_date, gender=gender, identification_type=identification_type,
+        identification_number=identification_number, mobile_number=mobile_number, reservation=reservation
+    )
+    try:
+        guest.save()
+    except Exception as e:
+        print(e)
 
 
 def details_admin(request):

@@ -1,5 +1,6 @@
 from django.db import models
 from .utils import ROOM_TYPES, LOCATION_CHOICES, CAPACITY_ROOMS
+from accounts.utils import IDENTIFICATION_TYPES, GENDER
 
 from accounts.models import CustomUser
 
@@ -47,5 +48,25 @@ class Reservation(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
 
+    @property
+    def guests(self):
+        return Guest.objects.filter(reservation=self.id)
+
     def __str__(self):
         return 'Reserva ID{}'.format(self.id)
+
+
+class Guest(models.Model):
+    first_name = models.CharField(max_length=50)
+    second_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50)
+    last_second_name = models.CharField(max_length=50, null=True)
+    birthday_date = models.DateField()
+    gender = models.CharField(choices=GENDER, max_length=50)
+    identification_number = models.CharField(max_length=12)
+    identification_type = models.CharField(choices=IDENTIFICATION_TYPES, max_length=50)
+    mobile_number = models.CharField(max_length=10)
+    reservation = models.ForeignKey(Reservation, default=1, verbose_name='Reservation', on_delete=models.SET_DEFAULT)
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)

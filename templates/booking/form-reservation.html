@@ -1,17 +1,110 @@
 {% extends 'base.html' %}
+<title>{% block title %}Reservation{% endblock %}</title>
 {% block content %}
-<form method="post">
-        {% csrf_token %}
-    <input type="hidden" name="user" required="" id="id_user" value="{{user.id}}"></p>
+<div class="container">
+  <div class="alert alert-success" role="alert">
+      <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="user" required="" id="id_user" value="{{user.id}}"></p>
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                  <label for="id_date_of_enter">Fecha de Entrada:</label>
+                  <input type="date" name="date_of_enter" id="id_date_of_enter" max="{{max_day}}" min="{{today}}" class="form-control">
+              </div>
+              <div class="form-group col-md-6">
+                  <label for="id_date_of_exit">Fecha de Salida:</label>
+                  <input type="date" name="date_of_exit" id="id_date_of_exit" max="{{max_day}}" min="{{today}}" class="form-control">
+              </div>
+          </div>
+          {% for i in range %}
+          <h6>Datos de Huesped</h6>
+          <hr>
+          <div class="form-row">
+              <div class="form-group col-md-3">
+                  <div for="id_first_name{{i}}" class="form-group">
+                      <label for="id_first_name{{i}}" class="">Nombre</label>
+                      <div class="">
+                          <input type="text" name="first_name{{i}}" maxlength="30" class="textinput textInput form-control" id="id_first_name{{i}}" required>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-3">
+                  <div for="id_second_name{{i}}" class="form-group">
+                      <label for="id_second_name{{i}}" class="">Segundo Nombre</label>
+                      <div class="">
+                          <input type="text" name="second_name{{i}}" maxlength="30" class="textinput textInput form-control" id="id_second_name{{i}}">
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-3">
+                  <div for="id_last_name{{i}}" class="form-group">
+                      <label for="id_last_name{{i}}" class="">Apellido</label>
+                      <div class="">
+                          <input type="text" name="last_name{{i}}" maxlength="150" class="textinput textInput form-control" id="id_last_name{{i}}" required>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-3">
+                  <div for="id_second_last_name{{i}}" class="form-group">
+                      <label for="id_second_last_name{{i}}" class="">Segundo Apellido</label>
+                      <div class="">
+                          <input type="text" name="second_last_name{{i}}" maxlength="150" class="textinput textInput form-control" id="id_second_last_name{{i}}">
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-4">
+                  <div id="div_id_gender" class="form-group">
+                      <label for="id_gender{{i}}" class="">Genero</label>
+                      <div class="">
+                          <select name="gender{{i}}" class="select form-control" id="id_gender{{i}}" required>
+                              <option value="" selected="">---------</option>
+                              <option value="male">Masculino</option>
+                              <option value="female">Femenino</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-4">
+                  <div id="div_id_identification_type{{i}}" class="form-group">
+                      <label for="id_identification_type{{i}}" class="">Tipo ID</label>
+                      <div class="">
+                          <select name="identification_type{{i}}" class="select form-control" id="id_identification_type{{i}}" required>
+                              <option value="" selected="">---------</option>
+                              <option value="CC">CÉDULA DE CIUDADANÍA</option>
+                              <option value="CE">CÉDULA DE EXTRANJERIA</option>
+                              <option value="PS">PASAPORTE</option>
+                              <option value="NIT">NIT</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-4">
+                  <label >Fecha de Nacimiento</label>
+                  <input type="date" name="birthday_date{{i}}" id="id_birthday_date{{i}}" max="3000-12-31" min="1000-01-01" class="form-control">
+              </div>
+              <div class="form-group col-md-6">
+                  <div id="div_id_identification_number{{i}}" class="form-group">
+                      <label for="id_identification_number{{i}}" class="">Número de Indentificación</label>
+                      <div class="">
+                          <input type="text" name="identification_number{{i}}" maxlength="12" class="textinput textInput form-control" id="id_identification_number{{i}}" required>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group col-md-6">
+                  <div id="div_id_mobile_number{{i}}" class="form-group">
+                      <label for="id_identification_number{{i}}" class="">Número de telefóno</label>
+                      <div class="">
+                          <input type="text" name="mobile_number{{i}}" maxlength="12" class="textinput textInput form-control" id="id_mobile_number{{i}}" required>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+          <input class="btn btn-success" type="submit" value="RESERVAR">
+      </form>
+  </div>
+</div>
 
-    <div class="form-group col-md-6">
-        <label for="id_date_of_enter">Fecha de Entrada:</label>
-        <input type="date" name="date_of_enter" id="id_date_of_enter" max="3000-12-31" min="1000-01-01" class="form-control">
-    </div>
-    <div class="form-group col-md-6">
-        <label for="id_date_of_exit">Fecha de Salida:</label>
-        <input type="date" name="date_of_exit" id="id_date_of_exit" max="3000-12-31" min="1000-01-01" class="form-control">
-    </div>
-    <input type="submit" value="Submit">
-</form>
 {% endblock %}
