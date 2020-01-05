@@ -2,12 +2,13 @@ import json
 import datetime
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import Hotel, Room, Reservation
 from accounts.models import CustomUser
@@ -66,7 +67,14 @@ def reservation_view(request, room):
         try:
             reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
             reservation.save()
-            print(HttpResponse(json.dumps({'mensaje': 'Reserva guardada exitosamente.'}), content_type='application/json'))
+            subject = 'ROIBACK Your Reservation has been Confirmed'
+            message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} con salida {}'.format(
+                user.first_name, user.last_name, room.hotel.name, date_enter, date_exit
+            )
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user.email, ]
+            send_mail(subject, message, email_from, recipient_list)
+            return redirect('home')
         except Exception as e:
             print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
 
