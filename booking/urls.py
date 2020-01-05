@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^update-room/(?P<pk>\d+)$',  permission_required('is_staff')(views.RoomUpdate.as_view()),
         name='update_room'),
     url(r'^delete-room/(?P<pk>\d+)$',  permission_required('is_staff')(views.RoomDelete.as_view()),
-        name='delete_room')
+        name='delete_room'),
+    url(r'^new-reservation/(?P<room>\w{0,50})/$',  views.reservation_view, name='reservation')
 ]

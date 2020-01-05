@@ -1,20 +1,26 @@
+import json
+
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.db.models import Q
 
-from .models import Hotel, Room
+from .models import Hotel, Room, Reservation
+from accounts.models import CustomUser
 from .utils import is_valid_queryparam, normalize_string
 
 
 def filter_view(request):
     query_set = Room.objects.all()
+    reservations = Reservation.objects.all()
     location_room_query = request.GET.get('location_room')
     capacity_room_query = request.GET.get('capacity_room')
     date_in_query = request.GET.get('date_in')
     date_out_query = request.GET.get('date_out')
-    print(location_room_query)
+
     if is_valid_queryparam(location_room_query):
         query_set = query_set.filter(
             hotel__location__icontains=normalize_string(location_room_query),)
@@ -22,9 +28,14 @@ def filter_view(request):
     if is_valid_queryparam(capacity_room_query):
         query_set = query_set.filter(
             capacity=capacity_room_query,)
-
     if is_valid_queryparam(date_in_query) and is_valid_queryparam(date_out_query):
-        query_set = query_set.exclude()
+        reservations = reservations.filter(
+            Q(date_of_enter__range=(date_in_query, date_out_query)) |
+            Q(date_of_exit__range=(date_in_query, date_out_query)))
+        list_reservation = []
+        for reservation in reservations:
+            list_reservation.append(reservation.reserved_room.id)
+        query_set = query_set.exclude(id__in=list_reservation)
 
     context = {
         'rooms': query_set
@@ -32,6 +43,28 @@ def filter_view(request):
     print(query_set)
 
     return render(request, 'home.html', context)
+
+
+def reservation_view(request, room):
+    user = request.POST.get('user')
+    room = room
+    date_enter = request.POST.get('date_of_enter')
+    date_exit = request.POST.get('date_of_exit')
+    reservation = None
+    if is_valid_queryparam(user):
+        user = CustomUser.objects.get(id=int(user))
+
+    if is_valid_queryparam(room):
+        room = Room.objects.get(id=int(room))
+    if user and room:
+        try:
+            reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
+            reservation.save()
+            print(HttpResponse(json.dumps({'mensaje': 'Reserva guardada exitosamente.'}), content_type='application/json'))
+        except Exception as e:
+            print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
+
+    return render(request, 'booking/form-reservation.html', )
 
 
 class HotelList(ListView):
@@ -82,3 +115,10 @@ class RoomDelete(DeleteView):
     model = Room
     template_name = 'booking/confirm-delete.html'
     success_url = reverse_lazy('list_hotel')
+
+
+class ReservationCreate(CreateView):
+    model = Reservation
+    template_name = 'booking/form-reservation.html'
+    success_url = reverse_lazy('home')
+    fields = ['user', 'reserved_room','date_of_enter', 'date_of_exit', ]

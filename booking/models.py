@@ -34,9 +34,14 @@ class Room(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
 
+    def __str__(self):
+        return '{} - {}  '.format(self.hotel.name, self.number_room)
+
 
 class Reservation(models.Model):
     date_of_enter = models.DateField(verbose_name='Fecha de Entrada')
     date_of_exit = models.DateField(verbose_name='Fecha de Salida')
     reserved_room = models.ForeignKey(Room, default=1, verbose_name='Room', on_delete=models.SET_DEFAULT)
     user = models.ForeignKey(CustomUser, default=1, verbose_name='User', on_delete=models.SET_DEFAULT)
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
