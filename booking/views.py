@@ -50,7 +50,6 @@ def reservation_view(request, room):
     room = room
     date_enter = request.POST.get('date_of_enter')
     date_exit = request.POST.get('date_of_exit')
-    reservation = None
     if is_valid_queryparam(user):
         user = CustomUser.objects.get(id=int(user))
 
