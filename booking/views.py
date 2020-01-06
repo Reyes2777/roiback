@@ -176,11 +176,25 @@ def details_admin(request):
 
 def reservation_list(request):
     reservations = Reservation.objects.all()
-
+    status_reservation(reservations)
     context = {
         'reservations': reservations,
     }
     return render(request, 'booking/bookings.html', context)
+
+
+def status_reservation(reservations):
+    today = datetime.date.today()
+    for reservation in reservations:
+        if reservation.date_of_exit < today:
+            reservation.status = 'INACTIVA'
+            reservation.save(update_fields=['status'])
+        elif reservation.date_of_enter <= today <= reservation.date_of_exit:
+            reservation.status = 'ACTIVA'
+            reservation.save(update_fields=['status'])
+        elif reservation.date_of_enter > today:
+            reservation.status = 'RESERVADA'
+            reservation.save(update_fields=['status'])
 
 
 class HotelCreate(CreateView):

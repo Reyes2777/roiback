@@ -48,6 +48,7 @@ class Reservation(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
     price_total = models.IntegerField(null=True)
+    status = models.CharField(max_length=50, null=True)
 
     @property
     def guests(self):
