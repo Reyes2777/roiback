@@ -1,7 +1,5 @@
-import json
 import datetime
 
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -9,7 +7,7 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .models import Hotel, Room, Reservation, Guest
+from .models import Hotel, Room, Reservation, Guest, Commentary
 from accounts.models import CustomUser
 from .utils import is_valid_queryparam, normalize_string
 
@@ -22,8 +20,16 @@ def filter_view(request):
     count_reservations = reservations.count()
     location_room_query = request.GET.get('location_room')
     capacity_room_query = request.GET.get('capacity_room')
+    comentary = request.POST.get('comentary')
+    user = request.POST.get('user')
+    room = request.POST.get('room')
     date_in_query = request.GET.get('date_in')
     date_out_query = request.GET.get('date_out')
+    if request.POST:
+        user = CustomUser.objects.get(id=int(user))
+        room = Room.objects.get(id=int(room))
+        comentary = Commentary(text=comentary, user=user, room=room)
+        comentary.save()
 
     if is_valid_queryparam(location_room_query):
         query_set = query_set.filter(
@@ -31,7 +37,6 @@ def filter_view(request):
             hotel__active=True,
             active=True
         )
-
     if is_valid_queryparam(capacity_room_query):
         query_set = query_set.filter(
             capacity=capacity_room_query,)
@@ -50,8 +55,6 @@ def filter_view(request):
         'today': today.strftime('%Y-%m-%d'),
         'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
     }
-    print(query_set)
-
     return render(request, 'home.html', context)
 
 

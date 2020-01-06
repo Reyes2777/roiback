@@ -39,6 +39,10 @@ class Room(models.Model):
     def __str__(self):
         return '{} - {}  '.format(self.hotel.name, self.number_room)
 
+    @property
+    def comments(self):
+        return Commentary.objects.filter(room__id=self.id)
+
 
 class Reservation(models.Model):
     date_of_enter = models.DateField(verbose_name='Fecha de Entrada')
@@ -73,3 +77,15 @@ class Guest(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
+
+class Commentary(models.Model):
+    text = models.TextField(blank=False)
+    room = models.ForeignKey(Room, default=None, verbose_name='Room', on_delete=models.SET_DEFAULT, null=True)
+    hotel = models.ForeignKey(Hotel, verbose_name='Hotel', default=None, on_delete=models.SET_DEFAULT, null=True)
+    user = models.ForeignKey(CustomUser, verbose_name='User', default=None, on_delete=models.SET_DEFAULT)
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
+
+    def __str__(self):
+        return '{} por {}'.format(self.text, self.user)
