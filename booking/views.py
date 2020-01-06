@@ -92,7 +92,7 @@ def reservations_view(request, room):
                     create_guest(request, _id, reservation)
                 return redirect('home')
             except Exception as e:
-                print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
+                print(e)
         else:
             context['not_validate_dates'] = True
             return render(request, 'booking/form-reservation.html', context)
