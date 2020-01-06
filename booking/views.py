@@ -174,9 +174,15 @@ def details_admin(request):
     return render(request, 'booking/details.html', context)
 
 
-def reservation_list(request):
+def reservation_list(request, status):
     reservations = Reservation.objects.all()
     status_reservation(reservations)
+
+    if status != 'all':
+        reservations = reservations.filter(
+            status=status
+        )
+
     context = {
         'reservations': reservations,
     }

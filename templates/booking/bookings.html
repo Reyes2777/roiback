@@ -5,6 +5,15 @@
   <div class="row" style="height: 50px;"></div>
   <div class="row">
     <div class="col-md-12">
+      <a class="btn btn-info" href="{% url 'reservations' 'all' %}">TODOS</a>
+      <a class="btn btn-primary" href="{% url 'reservations' 'ACTIVA' %}">ACTIVA</a>
+      <a class="btn btn-success" href="{% url 'reservations' 'RESERVADA' %}">RESERVADA</a>
+      <a class="btn btn-secondary" href="{% url 'reservations' 'INACTIVA' %}">INACTIVA</a>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-12">
       <table class="table table-striped table-sm">
         <thead>
           <tr class="table-success">
@@ -32,7 +41,14 @@
               <td>{{reservation.date_of_exit}}</td>
               <td>{{reservation.created}}</td>
             <td>
-                <a class="text-success"href="{% url 'detail_reservation' reservation.id %}"><small>Detalles</small></a>
+              <a class="text-warning" href="{% url 'detail_reservation' reservation.id %}"><small>DETALLES</small></a><small> |</small>
+              {%if reservation.status == 'INACTIVA'%}
+              <a class="text-secondary" href="{% url 'reservations' reservation.status %}"><small>{{reservation.status}}</small></a>
+              {%elif reservation.status == 'ACTIVA'%}
+              <a class="text-primary" href="{% url 'reservations' reservation.status %}"><small>{{reservation.status}}</small></a>
+              {%else%}
+              <a class="text-success" href="{% url 'reservations' reservation.status %}"><small>{{reservation.status}}</small></a>
+              {%endif%}
             <td>
             </td>
           </tr>
