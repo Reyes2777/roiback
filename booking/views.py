@@ -18,7 +18,7 @@ def filter_view(request):
     query_set = Room.objects.filter(active=True,
                                     hotel__active=True)
     today = datetime.date.today()
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.filter(status='RESERVADA')
     count_reservations = reservations.count()
     location_room_query = request.GET.get('location_room')
     capacity_room_query = request.GET.get('capacity_room')
