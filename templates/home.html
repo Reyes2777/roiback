@@ -38,8 +38,8 @@
     <button type="submit" class="btn btn-success">Busqueda</button>
             {% if user.is_staff %}
             <a class="btn btn-success" href="{% url 'reservations'%}"><small>RESERVAS</small>
-            {% endif %}
             <span class="badge badge-light">{{qt_reservations}}</span>
+                {% endif %}
         </a>
   </form>
   </div>
