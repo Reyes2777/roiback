@@ -82,14 +82,19 @@ def reservations_view(request, room):
                                           date_of_exit=date_exit,
                                           price_total=price_total)
                 reservation.save()
-                subject = 'ROIBACK Your Reservation has been Confirmed'
-                message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} ' \
-                          'con salida {}'.format(user.first_name, user.last_name, room.hotel.name, date_enter, date_exit)
-                email_from = settings.EMAIL_HOST_USER
-                recipient_list = [user.email, ]
-                send_mail(subject, message, email_from, recipient_list)
                 for _id in range(int(room.capacity)):
                     create_guest(request, _id, reservation)
+                subject = 'ROIBACK Your Reservation has been Confirmed'
+                message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} ' \
+                          'con salida {}'.format(user.first_name, user.last_name, room.hotel.name, date_enter,
+                                                 date_exit)
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [user.email, ]
+                try:
+
+                    send_mail(subject, message, email_from, recipient_list)
+                except Exception as e:
+                    print(e)
                 return redirect('home')
             except Exception as e:
                 print(e)
