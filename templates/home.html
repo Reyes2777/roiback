@@ -50,21 +50,35 @@
   <div class="row">
     {% for room in rooms %}
     <div class="col-12">
-      <div class="card mb-2 border-success" style="height: 275px;">
-        <div class="row">
-          <div class="col-md-3">
-              <img src={{room.picture}} class="card-img" alt="Card image" style="height: 273px">
+      <div class="card mb-2 border-success" style="height: 305px;">
+          <div class="row">
+              <div class="col-md-3">
+                  <img src={{room.picture}} class="card-img" alt="Card image" style="height: 303px">
+              </div>
+              <div class="col-md-9">
+                  <div class="card-body">
+                      <div class="row alert alert-success">
+                          <div class="col-md-6">
+                              <h5 class="card-title text-uppercase">{{room.hotel.name}}</h5>
+                          </div>
+                      </div>
+                      <div class="row ">
+                          <div class="col-md-7 alert alert-secondary">
+                              <p class="card-text text-justify"><small>{{room.hotel.description}}</small></p>
+                              <a class="btn btn-success"href="{% url 'reservation' room.id %}">RESERVAR</a>
+                          </div>
+                          <div class="col-md-1">
+                          </div>
+                          <div class="col-md-4 alert alert-secondary">
+                              <p class="card-title text-uppercase"><small class="font-weight-bold">ubicación: </small>{{room.hotel.location|capfirst }}</p>
+                              <p class="card-title text-uppercase"><small class="font-weight-bold">precio: </small>{{room.price}}</p>
+                              <p class="card-title text-uppercase"><small class="font-weight-bold">No. Habitación: </small>{{room.number_room}}</p>
+                              <p class="card-title text-uppercase"><small class="font-weight-bold">No. Habitación: </small>{{room.capacity}}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
-          <div class="col-md-9">
-             <div class="card-body">
-               <h5 class="card-title">{{room.hotel.name}} - {{room.hotel.location|capfirst }} </h5>
-               <p class="card-text"><small>{{room.hotel.description}}</small></p>
-               <p class="card-text">Tipo de Habitación: {{room.room_type}}</p>
-               <p class="card-text">Capacidad: {{room.capacity}} Numero de Habitación: {{room.number_room}}</p>
-               <a class="btn btn-success"href="{% url 'reservation' room.id %}">Reservar</a>
-             </div>
-          </div>
-        </div>
       </div>
     </div>
     {% endfor %}
