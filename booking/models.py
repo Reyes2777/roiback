@@ -47,6 +47,7 @@ class Reservation(models.Model):
     user = models.ForeignKey(CustomUser, default=1, verbose_name='User', on_delete=models.SET_DEFAULT)
     created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated = models.DateTimeField(auto_now=True, verbose_name='Fecha de edición')
+    price_total = models.IntegerField(null=True)
 
     @property
     def guests(self):
@@ -61,6 +62,7 @@ class Guest(models.Model):
     second_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50)
     last_second_name = models.CharField(max_length=50, null=True)
+    email = models.CharField(max_length=50, null=True)
     birthday_date = models.DateField()
     gender = models.CharField(choices=GENDER, max_length=50)
     identification_number = models.CharField(max_length=12)

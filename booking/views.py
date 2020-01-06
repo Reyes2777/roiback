@@ -19,6 +19,7 @@ def filter_view(request):
                                     hotel__active=True)
     today = datetime.date.today()
     reservations = Reservation.objects.all()
+    count_reservations = reservations.count()
     location_room_query = request.GET.get('location_room')
     capacity_room_query = request.GET.get('capacity_room')
     date_in_query = request.GET.get('date_in')
@@ -45,6 +46,7 @@ def filter_view(request):
 
     context = {
         'rooms': query_set,
+        'qt_reservations': count_reservations,
         'today': today.strftime('%Y-%m-%d'),
         'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
     }
@@ -53,7 +55,7 @@ def filter_view(request):
     return render(request, 'home.html', context)
 
 
-def reservation_view(request, room):
+def reservations_view(request, room):
     user = request.POST.get('user')
     today = datetime.date.today()
     date_enter = request.POST.get('date_of_enter')
@@ -73,7 +75,12 @@ def reservation_view(request, room):
     if user and room:
         if validate_availability_rooms(date_enter, date_exit, user):
             try:
-                reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
+                price_total = calculate_price_total(date_enter, date_exit, room.price)
+                reservation = Reservation(user=user,
+                                          reserved_room=room,
+                                          date_of_enter=date_enter,
+                                          date_of_exit=date_exit,
+                                          price_total=price_total)
                 reservation.save()
                 subject = 'ROIBACK Your Reservation has been Confirmed'
                 message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} ' \
@@ -95,17 +102,20 @@ def reservation_view(request, room):
 def validate_availability_rooms(date_enter, date_exit, user):
     reservations = Reservation.objects.all()
     print(reservations)
-    try:
-        reservations = reservations.filter(
-            Q(date_of_enter__range=(date_enter, date_exit)) |
-            Q(date_of_exit__range=(date_enter, date_exit)),
-            reserved_room__id=int(user.id))
-    except Exception as e:
-        print(e)
-    if reservations:
-        return False
+    if datetime.datetime.strptime(date_enter, '%Y-%m-%d') < datetime.datetime.strptime(date_exit, '%Y-%m-%d'):
+        try:
+            reservations = reservations.filter(
+                Q(date_of_enter__range=(date_enter, date_exit)) |
+                Q(date_of_exit__range=(date_enter, date_exit)),
+                reserved_room__id=int(user.id))
+        except Exception as e:
+            print(e)
+        if reservations:
+            return False
+        else:
+            return True
     else:
-        return True
+        return False
 
 
 def create_guest(request, _id, reservation):
@@ -118,19 +128,38 @@ def create_guest(request, _id, reservation):
     identification_number = request.POST.get('identification_number{}'.format(_id))
     identification_type = request.POST.get('identification_type{}'.format(_id))
     mobile_number = request.POST.get('mobile_number{}'.format(_id))
+    email = request.POST.get('email{}'.format(_id))
 
     print(first_name, second_name, last_name, last_second_name, birthday_date, gender, identification_number,
-          identification_type, mobile_number)
+          identification_type, mobile_number, email)
 
     guest = Guest(
         first_name=first_name, second_name=second_name, last_name=last_name, last_second_name=last_second_name,
         birthday_date=birthday_date, gender=gender, identification_type=identification_type,
-        identification_number=identification_number, mobile_number=mobile_number, reservation=reservation
+        identification_number=identification_number, mobile_number=mobile_number, reservation=reservation,
+        email=email
     )
     try:
         guest.save()
     except Exception as e:
         print(e)
+
+
+def calculate_price_total(date_enter, date_exit, price):
+    date_enter = datetime.datetime.strptime(date_enter, '%Y-%m-%d')
+    date_exit = datetime.datetime.strptime(date_exit, '%Y-%m-%d')
+    days = date_exit - date_enter
+    price_total = days.days * price
+    print(price_total)
+    return price_total
+
+
+def details_reservation(request, id_reservation):
+    reservation = Reservation.objects.get(id=int(id_reservation))
+    context = {
+        'reservation': reservation,
+    }
+    return render(request, 'booking/detail-booking.html', context)
 
 
 def details_admin(request):

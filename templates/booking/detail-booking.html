@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+<title>{% block title %}Reservations{% endblock %}</title>
+{% block content %}
+<div class="container">
+  <div class="row" style="height: 50px;"></div>
+  <div class="alert alert-success" role="alert">
+    <div class="col-md-12">
+      <p class="text-center font-weight-bold">DETALLES DE LA RESERVA ID {{reservation.id}}</p>
+      <div class="row ">
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">RESERVA POR:</small></label>
+          <p class="text-left">{{reservation.user.first_name}} {{reservation.user.last_name}}</p>
+        </div>
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">FECHA DE LA RESERVA:</small></label>
+          <p class="text-left">{{reservation.created}}</p>
+        </div>
+        <div class="col-sm-2">
+          <label><small class="font-weight-bold">HABITACION:</small></label>
+          <p class="text-left">{{reservation.reserved_room.hotel.name}}</p>
+        </div>
+        <div class="col-sm-2">
+          <div class="row">
+            <label><small class="font-weight-bold">INGRESO:</small><small> {{reservation.date_of_enter}}</small></label>
+          </div>
+          <div class="row">
+            <label><small class="font-weight-bold">SALIDA:</small><small> {{reservation.date_of_exit}}</small></label>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <label><small class="font-weight-bold">PRECIO TOTAL:</small></label>
+          <p class="text-left">{{reservation.price_total}}</p>
+        </div>
+      </div>
+      {% for guest in reservation.guests %}
+      <hr>
+      <label><small class="font-weight-bold">DETALLES DEL HUESPED</small></label>
+       <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">NOMBRES Y APELLIDOS:</small></label>
+          <p class="text-left">{{guest.first_name}} {{guest.second_name}} {{guest.last_name}} {{guest.last_second_name}}</p>
+        </div>
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">TIPO IDENTIFICACION:</small></label>
+          <p class="text-left">{{guest.identification_type}}</p>
+        </div>
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">NO. IDENTIFICACION:</small></label>
+          <p class="text-left">{{guest.identification_number}}</p>
+        </div>
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">GENERO:</small></label>
+          <p class="text-left">{{guest.gender}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">FECHA DE NACIMIENTO:</small></label>
+          <p class="text-left">{{guest.birthday_date}}</p>
+        </div>
+        <div class="col-sm-3">
+          <label><small class="font-weight-bold">NO TELEFONO:</small></label>
+          <p class="text-left">{{guest.mobile_number}}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

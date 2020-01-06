@@ -32,8 +32,7 @@
               <td>{{reservation.date_of_exit}}</td>
               <td>{{reservation.created}}</td>
             <td>
-                <a class="text-success"href="{% url 'update_room' reservation.id %}"><small>Editar</small></a><small> |</small>
-                <a class="text-danger" href="{% url 'delete_reservation' reservation.id %}"><small>Borrar</small></a></td>
+                <a class="text-success"href="{% url 'detail_reservation' reservation.id %}"><small>Detalles</small></a>
             <td>
             </td>
           </tr>
