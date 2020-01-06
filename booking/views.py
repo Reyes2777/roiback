@@ -3,7 +3,6 @@ import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db.models import Q
@@ -57,12 +56,12 @@ def filter_view(request):
 def reservation_view(request, room):
     user = request.POST.get('user')
     today = datetime.date.today()
-    room = room
     date_enter = request.POST.get('date_of_enter')
     date_exit = request.POST.get('date_of_exit')
     context = {
         'today': today.strftime('%Y-%m-%d'),
-        'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
+        'max_day': (today + datetime.timedelta(days=365)).strftime('%Y-%m-%d'),
+        'not_validate_dates': False
     }
     if is_valid_queryparam(user):
         user = CustomUser.objects.get(id=int(user))
@@ -72,23 +71,41 @@ def reservation_view(request, room):
         context.update({'range': range(int(room.capacity))})
 
     if user and room:
-        try:
-            reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
-            reservation.save()
-            subject = 'ROIBACK Your Reservation has been Confirmed'
-            message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} con salida {}'.format(
-                user.first_name, user.last_name, room.hotel.name, date_enter, date_exit
-            )
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail(subject, message, email_from, recipient_list)
-            for _id in range(int(room.capacity)):
-                create_guest(request, _id, reservation)
-            return redirect('home')
-        except Exception as e:
-            print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
-
+        if validate_availability_rooms(date_enter, date_exit, user):
+            try:
+                reservation = Reservation(user=user, reserved_room=room, date_of_enter=date_enter, date_of_exit=date_exit)
+                reservation.save()
+                subject = 'ROIBACK Your Reservation has been Confirmed'
+                message = '{} {} Tu reservación ha sido confirmada en el hotel {} para fecha de ingreso {} ' \
+                          'con salida {}'.format(user.first_name, user.last_name, room.hotel.name, date_enter, date_exit)
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [user.email, ]
+                send_mail(subject, message, email_from, recipient_list)
+                for _id in range(int(room.capacity)):
+                    create_guest(request, _id, reservation)
+                return redirect('home')
+            except Exception as e:
+                print(HttpResponse(json.dumps({'mensaje': e}), content_type='application/json'))
+        else:
+            context['not_validate_dates'] = True
+            return render(request, 'booking/form-reservation.html', context)
     return render(request, 'booking/form-reservation.html', context)
+
+
+def validate_availability_rooms(date_enter, date_exit, user):
+    reservations = Reservation.objects.all()
+    print(reservations)
+    try:
+        reservations = reservations.filter(
+            Q(date_of_enter__range=(date_enter, date_exit)) |
+            Q(date_of_exit__range=(date_enter, date_exit)),
+            reserved_room__id=int(user.id))
+    except Exception as e:
+        print(e)
+    if reservations:
+        return False
+    else:
+        return True
 
 
 def create_guest(request, _id, reservation):
@@ -181,10 +198,3 @@ class RoomDelete(DeleteView):
     model = Room
     template_name = 'booking/confirm-delete.html'
     success_url = reverse_lazy('details')
-
-
-class ReservationCreate(CreateView):
-    model = Reservation
-    template_name = 'booking/form-reservation.html'
-    success_url = reverse_lazy('home')
-    fields = ['user', 'reserved_room', 'date_of_enter', 'date_of_exit', ]
